@@ -3,6 +3,8 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using BatchParameterUpdate.Models;
 using BatchParameterUpdate.Services;
+using BatchParameterUpdate.UI;
+using System.Windows.Interop;
 
 namespace BatchParameterUpdate.Commands;
 
@@ -29,15 +31,28 @@ public class BatchParameterUpdateCommand : IExternalCommand
 
         if (selectedIds.Count == 0)
         {
-            TaskDialog.Show(
-                "Batch Parameter Update",
-                "Select one or more elements before running this command.");
+            var emptyDialog = new TaskDialog("Batch Parameter Update")
+            {
+                TitleAutoPrefix = false,
+                MainInstruction = "Select one or more elements before running this command."
+            };
+            emptyDialog.Show();
             return Result.Cancelled;
         }
 
-        // TODO: replace with values entered by the user in the input dialog.
-        const string parameterName = "Comments";
-        const string parameterValue = "Updated by add-in";
+        var inputWindow = new ParameterInputWindow();
+
+        // Setting Revit's main window as the owner keeps the dialog modal to Revit
+        // and prevents it from being sent behind the main window.
+        new WindowInteropHelper(inputWindow).Owner = commandData.Application.MainWindowHandle;
+
+        if (inputWindow.ShowDialog() != true)
+        {
+            return Result.Cancelled;
+        }
+
+        var parameterName = inputWindow.ParameterName;
+        var parameterValue = inputWindow.ParameterValue;
 
         BatchUpdateResult result;
 
@@ -74,18 +89,24 @@ public class BatchParameterUpdateCommand : IExternalCommand
     {
         var dialog = new TaskDialog("Batch Parameter Update")
         {
+            TitleAutoPrefix = false,
             MainInstruction = $"{result.UpdatedCount} updated, {result.SkippedCount} skipped."
         };
 
         if (result.SkippedCount > 0)
         {
-            var reasons = result.Skipped
+            var reasonGroups = result.Skipped
                 .GroupBy(skipped => skipped.Reason)
-                .Select(group => $"{Describe(group.Key)}: {group.Count()}");
+                .OrderByDescending(group => group.Count())
+                .ToList();
 
-            dialog.MainContent = string.Join(Environment.NewLine, reasons);
-
+            dialog.MainContent = reasonGroups.Count == 1
+                ? $"All skipped elements: {Describe(reasonGroups[0].Key).ToLowerInvariant()}."
+                : string.Join(
+                    Environment.NewLine,
+                    reasonGroups.Select(group => $"{Describe(group.Key)}: {group.Count()}"));
             var details = result.Skipped
+
                 .Select(skipped => skipped.Details is null
                     ? $"{skipped.ElementName} - {Describe(skipped.Reason)}"
                     : $"{skipped.ElementName} - {Describe(skipped.Reason)} ({skipped.Details})");

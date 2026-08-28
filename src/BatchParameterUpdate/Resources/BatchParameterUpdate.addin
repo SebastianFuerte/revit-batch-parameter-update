@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Command">
+		<Name>Batch Parameter Update</Name>
+		<Text>Batch Parameter Update</Text>
+		<Description>Batch updates a text instance parameter on the current selection.</Description>
+		<Assembly>BatchParameterUpdate\BatchParameterUpdate.dll</Assembly>
+		<AddInId>6978391C-7B74-42E4-98DF-23904308C84B</AddInId>
+		<FullClassName>BatchParameterUpdate.Commands.BatchParameterUpdateCommand</FullClassName>
+		<VendorId>SFUE</VendorId>
+		<VendorDescription>Sebastian Fuerte</VendorDescription>
+	</AddIn>
+</RevitAddIns>

@@ -16,4 +16,19 @@
     <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="2026.4.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\BatchParameterUpdate.addin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <Target Name="DeployAddin" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <PropertyGroup>
+      <RevitAddinsDir>$(AppData)\Autodesk\Revit\Addins\2026</RevitAddinsDir>
+    </PropertyGroup>
+    <Copy SourceFiles="$(ProjectDir)Resources\BatchParameterUpdate.addin"
+          DestinationFolder="$(RevitAddinsDir)" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(RevitAddinsDir)\BatchParameterUpdate" />
+  </Target>
 </Project>

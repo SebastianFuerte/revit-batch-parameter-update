@@ -26,9 +26,7 @@
     <PropertyGroup>
       <RevitAddinsDir>$(AppData)\Autodesk\Revit\Addins\2026</RevitAddinsDir>
     </PropertyGroup>
-    <Copy SourceFiles="$(ProjectDir)Resources\BatchParameterUpdate.addin"
-          DestinationFolder="$(RevitAddinsDir)" />
-    <Copy SourceFiles="$(TargetPath)"
-          DestinationFolder="$(RevitAddinsDir)\BatchParameterUpdate" />
+    <Copy SourceFiles="$(ProjectDir)Resources\BatchParameterUpdate.addin" DestinationFolder="$(RevitAddinsDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(RevitAddinsDir)\BatchParameterUpdate" />
   </Target>
 </Project>

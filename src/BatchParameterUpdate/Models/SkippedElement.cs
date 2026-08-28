@@ -1,12 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autodesk.Revit.DB;
 
-namespace BatchParameterUpdate.Models
+namespace BatchParameterUpdate.Models;
+
+/// <summary>
+/// An element that was not updated, and why.
+/// </summary>
+public sealed class SkippedElement
 {
-    internal class SkipReason
+    public SkippedElement(ElementId elementId, string elementName, SkipReason reason, string? details = null)
     {
+        ElementId = elementId;
+        ElementName = elementName;
+        Reason = reason;
+        Details = details;
     }
+
+    public ElementId ElementId { get; }
+
+    public string ElementName { get; }
+
+    public SkipReason Reason { get; }
+
+    /// <summary>Extra context, such as an exception message. Optional.</summary>
+    public string? Details { get; }
 }

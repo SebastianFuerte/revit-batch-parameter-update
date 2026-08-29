@@ -164,8 +164,9 @@ The following was exercised against a real Revit 2026 model:
 |---|---|
 | Successful update | Comments on walls |
 | Parameter not found | Comments on model lines |
-| Not a text parameter | Unconnected Height (Double) |
-| Not a text parameter | an ElementId-backed parameter |
+| Not a text parameter (Double) | Area on walls |
+| Not a text parameter (Integer) | Structural Usage on walls |
+| Not a text parameter (ElementId) | Base Constraint on walls |
 | Ambiguous parameter name | Category matched two parameters |
 | Read-only parameter | Family Name |
 | Empty selection | running the command with nothing selected |
